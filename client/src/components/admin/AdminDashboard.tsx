@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { apiUrl } from '../../utils/api';
 import { useApp } from '../../context/AppContext';
 import {
   ShieldCheck,
@@ -27,7 +28,7 @@ export const AdminDashboard: React.FC = () => {
 
   const fetchAdminStats = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/admin/stats');
+      const res = await fetch(apiUrl('/api/admin/stats'));
       if (res.ok) {
         const data = await res.json();
         setStats(data);

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { apiUrl } from '../../utils/api';
 import { useApp } from '../../context/AppContext';
 import { Mic, Volume2, VolumeX } from 'lucide-react';
 
@@ -59,7 +60,7 @@ export const EmergencyVoiceAssistant: React.FC = () => {
     try {
       const latitude = currentLocation?.latitude ?? selectedDestination?.coordinates.lat ?? 12.9716;
       const longitude = currentLocation?.longitude ?? selectedDestination?.coordinates.lng ?? 77.5946;
-      const response = await fetch('http://localhost:5000/api/ai/voice-assistant', {
+      const response = await fetch(apiUrl('/api/ai/voice-assistant'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

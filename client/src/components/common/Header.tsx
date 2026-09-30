@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { apiUrl } from '../../utils/api';
 import { useApp } from '../../context/AppContext';
 import { UserRole, Language } from '../../types';
 import {
@@ -80,7 +81,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenNotifications }) => {
     const timer = window.setTimeout(async () => {
       setIsSearchLoading(true);
       try {
-        const response = await fetch(`http://localhost:5000/api/search?q=${encodeURIComponent(globalSearchQuery.trim())}`, { signal: controller.signal });
+        const response = await fetch(apiUrl(`/api/search?q=${encodeURIComponent(globalSearchQuery.trim())}`), { signal: controller.signal });
         if (!response.ok) throw new Error('Search request failed');
         const data = await response.json();
         if (!controller.signal.aborted) setGlobalSearchResults(data.results || []);
