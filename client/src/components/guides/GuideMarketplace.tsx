@@ -4,6 +4,7 @@ import { useListingDestination } from '../../hooks/useListingDestination';
 import { ListingImage } from '../common/ListingImage';
 import { getDemoListingData, loadListingCollection } from '../../data/listingData';
 import { LocalGuide } from '../../types';
+import { apiUrl } from '../../utils/api';
 import {
   Users,
   ShieldCheck,
@@ -63,7 +64,7 @@ export const GuideMarketplace: React.FC = () => {
     if (selectedLanguage !== 'All') params.set('language', selectedLanguage);
     if (destinationId) params.set('destinationId', destinationId);
     const fallback = getDemoListingData(destination).guides;
-    const result = await loadListingCollection<LocalGuide>(`http://localhost:5000/api/guides?${params}`, 'guides', fallback, signal);
+    const result = await loadListingCollection<LocalGuide>(apiUrl(`/api/guides?${params}`), 'guides', fallback, signal);
     if (signal.aborted) return;
     setGuides(result.items);
     setListingNotice(result.requestFailed
@@ -88,7 +89,7 @@ export const GuideMarketplace: React.FC = () => {
   const handleConfirmBookGuide = async () => {
     if (!bookingGuide) return;
     try {
-      const res = await fetch('http://localhost:5000/api/guides/book', {
+      const res = await fetch(apiUrl('/api/guides/book'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ guideId: bookingGuide.id, days: activeTrip?.durationDays || 1, travelers: activeTrip?.travelers || 1 })

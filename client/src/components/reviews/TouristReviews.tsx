@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Review } from '../../types';
+import { apiUrl } from '../../utils/api';
 import {
   Star,
   ShieldCheck,
@@ -35,7 +36,7 @@ export const TouristReviews: React.FC = () => {
 
   const fetchReviews = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/reviews');
+      const res = await fetch(apiUrl('/api/reviews'));
       if (res.ok) {
         const data = await res.json();
         setReviews(data.reviews);
@@ -52,7 +53,7 @@ export const TouristReviews: React.FC = () => {
     if (!comment.trim()) return;
 
     try {
-      const res = await fetch('http://localhost:5000/api/reviews', {
+      const res = await fetch(apiUrl('/api/reviews'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

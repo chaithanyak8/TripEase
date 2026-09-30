@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { ListingImage } from '../common/ListingImage';
 import { Destination } from '../../types';
+import { apiUrl } from '../../utils/api';
 import {
   MapPin,
   Search,
@@ -49,7 +50,7 @@ export const DestinationExplorer: React.FC = () => {
       if (onlyBeyondCrowd) params.set('beyondTheCrowd', 'true');
       if (normalizedQuery) params.set('search', normalizedQuery);
 
-      const res = await fetch(`http://localhost:5000/api/destinations?${params}`);
+      const res = await fetch(apiUrl(`/api/destinations?${params}`));
       if (res.ok) {
         const data = await res.json();
         setDestinations(data.destinations || []);

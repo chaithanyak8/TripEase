@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useApp } from '../../context/AppContext';
+import { apiUrl } from '../../utils/api';
 import {
   Sparkles,
   Calendar,
@@ -109,7 +110,7 @@ export const AITripPlanner: React.FC = () => {
     };
 
     try {
-      const res = await fetch('http://localhost:5000/api/itineraries/generate', {
+      const res = await fetch(apiUrl('/api/itineraries/generate'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(plannerRequest)

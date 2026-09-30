@@ -4,6 +4,7 @@ import { useListingDestination } from '../../hooks/useListingDestination';
 import { ListingImage } from '../common/ListingImage';
 import { getDemoListingData, loadListingCollection } from '../../data/listingData';
 import { Hotel } from '../../types';
+import { apiUrl } from '../../utils/api';
 import {
   Hotel as HotelIcon,
   Star,
@@ -63,7 +64,7 @@ export const HotelDiscovery: React.FC = () => {
     const params = new URLSearchParams({ maxPrice: String(maxPrice), destination });
     if (destinationId) params.set('destinationId', destinationId);
     const fallback = getDemoListingData(destination).hotels;
-    const result = await loadListingCollection<Hotel>(`http://localhost:5000/api/hotels?${params}`, 'hotels', fallback, signal);
+    const result = await loadListingCollection<Hotel>(apiUrl(`/api/hotels?${params}`), 'hotels', fallback, signal);
     if (signal.aborted) return;
     setHotels(result.items);
     setListingNotice(result.requestFailed
@@ -94,7 +95,7 @@ export const HotelDiscovery: React.FC = () => {
     if (!bookingHotel) return;
 
     try {
-      const res = await fetch('http://localhost:5000/api/hotels/book', {
+      const res = await fetch(apiUrl('/api/hotels/book'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

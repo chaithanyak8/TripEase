@@ -3,10 +3,18 @@
   "version": "1.0.0",
   "description": "TripEase (YATRA360) - Smart India Hackathon 2026 Student Innovation Tourism Super-Platform",
   "private": true,
+  "type": "module",
   "scripts": {
+    "build": "npm --prefix client run build",
     "server": "npm --prefix server start",
     "client": "npm --prefix client run dev -- --host 0.0.0.0 --port 5173",
     "build:client": "npm --prefix client run build",
     "start": "npm run server"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "serverless-http": "^4.0.0"
   }
 }

@@ -96,6 +96,14 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({ origin: process.env.CLIENT_URL || true, credentials: true }));
 app.use(express.json());
 
+// Normalize incoming path for serverless functions and direct requests
+app.use((req, res, next) => {
+  if (!req.url.startsWith('/api') && !req.url.startsWith('/.netlify')) {
+    req.url = '/api' + req.url;
+  }
+  next();
+});
+
 const getLocationCoordinates = (req) => {
   const lat = Number(req.query.latitude ?? req.query.lat ?? req.body?.latitude ?? req.body?.lat);
   const lon = Number(req.query.longitude ?? req.query.lon ?? req.body?.longitude ?? req.body?.lon);
@@ -1348,12 +1356,17 @@ app.get('/api/demo/judge-package', (req, res) => {
   });
 });
 
-// Start listening
-app.listen(PORT, () => {
-  console.log(`====================================================`);
-  console.log(`🧭 TripEase / YATRA360 Backend API Server Running`);
-  console.log(`📍 Port: http://localhost:${PORT}`);
-  console.log(`🏆 Smart India Hackathon 2026 | Problem Statement 26204`);
-  console.log(`🎯 Theme: Travel & Tourism (AICTE & MIC Innovation)`);
-  console.log(`====================================================`);
-});
+// Start listening if running as a standalone server
+if (!process.env.NETLIFY && process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`====================================================`);
+    console.log(`🧭 TripEase / YATRA360 Backend API Server Running`);
+    console.log(`📍 Port: http://localhost:${PORT}`);
+    console.log(`🏆 Smart India Hackathon 2026 | Problem Statement 26204`);
+    console.log(`🎯 Theme: Travel & Tourism (AICTE & MIC Innovation)`);
+    console.log(`====================================================`);
+  });
+}
+
+export { app };
+export default app;

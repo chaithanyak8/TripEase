@@ -28,13 +28,15 @@ import { TouristReviews } from './components/reviews/TouristReviews';
 import { LocalBusinessDashboard } from './components/business/LocalBusinessDashboard';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 
+import { apiUrl } from './utils/api';
+
 const MainContent: React.FC = () => {
   const { activeTab, activateTrip, showToast, toastMessage } = useApp();
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
   const handlePlanCustomPrompt = async (promptText: string) => {
     try {
-      const res = await fetch('http://localhost:5000/api/itineraries/generate', {
+      const res = await fetch(apiUrl('/api/itineraries/generate'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

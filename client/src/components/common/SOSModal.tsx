@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useApp } from '../../context/AppContext';
+import { apiUrl } from '../../utils/api';
 import {
   ShieldAlert,
   PhoneCall,
@@ -31,7 +32,7 @@ export const SOSModal: React.FC = () => {
       destination: activeTrip.destination,
       destinationId: activeTrip.targetDestination?.id || ''
     });
-    fetch(`http://localhost:5000/api/safety?${params}`, { signal: controller.signal })
+    fetch(apiUrl(`/api/safety?${params}`), { signal: controller.signal })
       .then(response => response.ok ? response.json() : Promise.reject(new Error('Safety lookup failed')))
       .then(data => {
         if (!controller.signal.aborted) setNearbyHospitals(data.emergencyDirectory.nearbyHospitals);

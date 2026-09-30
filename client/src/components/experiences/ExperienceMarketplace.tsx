@@ -4,6 +4,7 @@ import { useListingDestination } from '../../hooks/useListingDestination';
 import { ListingImage } from '../common/ListingImage';
 import { getDemoListingData, loadListingCollection } from '../../data/listingData';
 import { LocalExperience } from '../../types';
+import { apiUrl } from '../../utils/api';
 import {
   Award,
   Sparkles,
@@ -55,7 +56,7 @@ export const ExperienceMarketplace: React.FC = () => {
     if (selectedCategory !== 'All') params.set('category', selectedCategory);
     if (destinationId) params.set('destinationId', destinationId);
     const fallback = getDemoListingData(destination).experiences;
-    const result = await loadListingCollection<LocalExperience>(`http://localhost:5000/api/experiences?${params}`, 'experiences', fallback, signal);
+    const result = await loadListingCollection<LocalExperience>(apiUrl(`/api/experiences?${params}`), 'experiences', fallback, signal);
     if (signal.aborted) return;
     setExperiences(result.items);
     setListingNotice(result.requestFailed
@@ -67,7 +68,7 @@ export const ExperienceMarketplace: React.FC = () => {
   const handleBookExperience = async () => {
     if (!selectedExpForBooking) return;
     try {
-      const res = await fetch('http://localhost:5000/api/experiences/book', {
+      const res = await fetch(apiUrl('/api/experiences/book'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ experienceId: selectedExpForBooking.id, travelers: activeTrip?.travelers || 1 })

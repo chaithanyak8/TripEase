@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import L from 'leaflet';
 import { useApp } from '../../context/AppContext';
 import { Destination } from '../../types';
+import { apiUrl } from '../../utils/api';
 import {
   Layers,
   MapPin,
@@ -57,7 +58,7 @@ export const SmartMap: React.FC = () => {
     setResolvedDestination(undefined);
     const controller = new AbortController();
     const params = new URLSearchParams({ search: activeTrip.destination });
-    fetch(`http://localhost:5000/api/destinations?${params}`, { signal: controller.signal })
+    fetch(apiUrl(`/api/destinations?${params}`), { signal: controller.signal })
       .then(response => response.ok ? response.json() : Promise.reject(new Error('Destination lookup failed')))
       .then(data => {
         const match = data.destinations.find((item: Destination) =>

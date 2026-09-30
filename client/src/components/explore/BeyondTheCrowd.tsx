@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { ListingImage } from '../common/ListingImage';
 import { Sparkles, HeartHandshake, ArrowRight, MapPin, Search } from 'lucide-react';
+import { apiUrl } from '../../utils/api';
 
 export const BeyondTheCrowd: React.FC = () => {
   const { setActiveTab, setSelectedDestinationForPlan, setSelectedDestination: setSelectedDestinationContext } = useApp();
@@ -30,7 +31,7 @@ export const BeyondTheCrowd: React.FC = () => {
       if (onlyBeyondCrowd) params.set('beyondTheCrowd', 'true');
       if (searchQuery.trim()) params.set('search', searchQuery.trim());
       try {
-        const response = await fetch(`http://localhost:5000/api/attractions?${params}`, { signal: controller.signal });
+        const response = await fetch(apiUrl(`/api/attractions?${params}`), { signal: controller.signal });
         if (!response.ok) throw new Error('Attraction request failed');
         const data = await response.json();
         setGems(data.attractions || []);

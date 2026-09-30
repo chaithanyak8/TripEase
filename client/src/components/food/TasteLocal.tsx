@@ -4,6 +4,7 @@ import { useListingDestination } from '../../hooks/useListingDestination';
 import { ListingImage } from '../common/ListingImage';
 import { getDemoListingData, loadListingCollection } from '../../data/listingData';
 import { FoodItem } from '../../types';
+import { apiUrl } from '../../utils/api';
 import {
   UtensilsCrossed,
   Sparkles,
@@ -46,7 +47,7 @@ export const TasteLocal: React.FC = () => {
     if (selectedDietary !== 'All') params.set('dietary', selectedDietary);
     if (destinationId) params.set('destinationId', destinationId);
     const fallback = getDemoListingData(destination).foods;
-    const result = await loadListingCollection<FoodItem>(`http://localhost:5000/api/food?${params}`, 'foods', fallback, signal);
+    const result = await loadListingCollection<FoodItem>(apiUrl(`/api/food?${params}`), 'foods', fallback, signal);
     if (signal.aborted) return;
     setFoods(result.items);
     setListingNotice(result.requestFailed

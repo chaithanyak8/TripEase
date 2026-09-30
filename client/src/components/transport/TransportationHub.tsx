@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { useListingDestination } from '../../hooks/useListingDestination';
 import { TransportOption } from '../../types';
+import { apiUrl } from '../../utils/api';
 import {
   Bus,
   Train,
@@ -46,7 +47,7 @@ export const TransportationHub: React.FC = () => {
     setLoading(true);
     try {
       const params = new URLSearchParams({ origin, destination });
-      const res = await fetch(`http://localhost:5000/api/transport?${params}`, { signal });
+      const res = await fetch(apiUrl(`/api/transport?${params}`), { signal });
       if (res.ok) {
         const data = await res.json();
         if (!signal.aborted && Array.isArray(data.options) && data.options.length > 0) {

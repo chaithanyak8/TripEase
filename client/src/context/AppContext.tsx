@@ -1,6 +1,35 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, UserRole, Language, Itinerary, Booking, ExpenseItem, NotificationItem, Destination } from '../types';
 import { translations } from '../locales/translations';
+import { apiUrl } from '../utils/api';
+
+const VALID_TABS = new Set([
+  'home',
+  'planner',
+  'explore',
+  'beyond-crowd',
+  'map',
+  'hotels',
+  'experiences',
+  'guides',
+  'transport',
+  'food',
+  'budget',
+  'safety',
+  'wallet',
+  'reviews',
+  'business',
+  'admin'
+]);
+
+const getInitialTab = (): string => {
+  if (typeof window === 'undefined') return 'home';
+  const path = window.location.pathname.replace(/^\/+|\/+$/g, '');
+  if (path && VALID_TABS.has(path)) {
+    return path;
+  }
+  return 'home';
+};
 
 interface AppContextType {
   user: User;
@@ -204,7 +233,32 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return (localStorage.getItem('tripease_lang') as Language) || 'en';
   });
 
-  const [activeTab, setActiveTab] = useState<string>('home');
+  const [activeTab, setActiveTabState] = useState<string>(getInitialTab);
+
+  const setActiveTab = (tab: string) => {
+    setActiveTabState(tab);
+    if (typeof window !== 'undefined') {
+      const targetPath = tab === 'home' ? '/' : `/${tab}`;
+      if (window.location.pathname !== targetPath) {
+        window.history.pushState(null, '', targetPath);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname.replace(/^\/+|\/+$/g, '');
+      if (path && VALID_TABS.has(path)) {
+        setActiveTabState(path);
+      } else {
+        setActiveTabState('home');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   const [highContrast, setHighContrast] = useState<boolean>(false);
   const [largeFont, setLargeFont] = useState<boolean>(false);
   const [offlineMode, setOfflineMode] = useState<boolean>(false);
@@ -393,7 +447,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // 1-Click Judge Demo Mode
   const loadJudgeDemoMode = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/demo/judge-package');
+      const res = await fetch(apiUrl('/api/demo/judge-package'));
       if (res.ok) {
         const data = await res.json();
         const pkg = data.package;
@@ -459,7 +513,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const modifyItinerary = async (modifier: string, customParam?: any) => {
     if (!activeTrip) return;
     try {
-      const res = await fetch('http://localhost:5000/api/itineraries/modify', {
+      const res = await fetch(apiUrl('/api/itineraries/modify'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ itinerary: activeTrip, modifier, newBudget: customParam })

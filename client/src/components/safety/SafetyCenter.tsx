@@ -11,8 +11,8 @@ import {
   Pill,
   Flame,
   Navigation
-} from 'lucide-react';
 import { EmergencyVoiceAssistant } from '../assistant/EmergencyVoiceAssistant';
+import { apiUrl } from '../../utils/api';
 
 export const SafetyCenter: React.FC = () => {
   const {
@@ -45,7 +45,7 @@ export const SafetyCenter: React.FC = () => {
       ? currentLocation.locationName
       : activeTrip?.destination || selectedDestination?.name || activeLocationName;
 
-    fetch(`http://localhost:5000/api/emergency/nearby?latitude=${latitude}&longitude=${longitude}&destination=${encodeURIComponent(destinationName)}`, { signal: controller.signal })
+    fetch(apiUrl(`/api/emergency/nearby?latitude=${latitude}&longitude=${longitude}&destination=${encodeURIComponent(destinationName)}`), { signal: controller.signal })
       .then((res) => res.ok ? res.json() : Promise.reject(new Error('Emergency lookup failed')))
       .then((data) => {
         if (!controller.signal.aborted) {
