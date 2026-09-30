@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { apiUrl } from '../../utils/api';
 import { useApp } from '../../context/AppContext';
 import {
   Building2,
@@ -34,7 +35,7 @@ export const LocalBusinessDashboard: React.FC = () => {
 
   const fetchBusinessData = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/business/dashboard');
+      const res = await fetch(apiUrl('/api/business/dashboard'));
       if (res.ok) {
         const data = await res.json();
         setBusinesses(data.businesses);
@@ -49,7 +50,7 @@ export const LocalBusinessDashboard: React.FC = () => {
   const handleRegisterBusiness = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/business/register', {
+      const res = await fetch(apiUrl('/api/business/register'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ businessName, type, ownerName, location, phone })

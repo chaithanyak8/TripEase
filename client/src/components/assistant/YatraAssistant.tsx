@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { apiUrl } from '../../utils/api';
 import { useApp } from '../../context/AppContext';
 import { Bot, Send, X, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 
@@ -578,7 +579,7 @@ export const YatraAssistant: React.FC = () => {
 
     try {
       setIsTyping(true);
-      const res = await fetch('http://localhost:5000/api/chat', {
+      const res = await fetch(apiUrl('/api/chat'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
